@@ -1,3 +1,38 @@
+# Terraform Cloud AWS Access Keys
+
+This module will create a Secrets Manager secret to rotate AWS access keys for
+use in a Terraform Cloud workspace. The included Lambda rotation function will
+generate new access keys and new Terraform Cloud OAuth tokens on a schedule and
+write the new values as variables to a Terraform Cloud Workspace.
+
+## Prerequisites
+
+* An IAM user capable of managing its own access keys
+* An existing access key for the above IAM user
+* A Terraform Workspace to which access keys will be provided
+
+## Usage
+
+```
+module "aws_access_keys" {
+  source = "git@github.com:thoughtbot/terraform-cloud-aws-access-keys.git?ref=v0.1.0"
+
+  # Provide details for your existing IAM user
+  aws_access_key_id           = var.aws_access_key_id
+  aws_iam_username            = "terraform-cloud"
+  aws_secret_access_key       = var.aws_secret_access_key
+
+  # Provide a name for the Secrets Manager secret
+  name                        = "terraform-cloud-access-keys"
+
+  # Provide details about your Terraform workspace
+  # Hint: you can provide the name of the workspace in which the module is used
+  terraform_organization_name = "my_org"
+  terraform_team_name         = "owners"
+  terraform_workspace_name    = "meta"
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
