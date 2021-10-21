@@ -1,0 +1,11 @@
+*.tfstate*
+.fmt
+.init
+.lint
+.lintinit
+.terraform
+.terraform-plugins
+.terraform.lock.hcl
+.terraformrc
+.validate
+test.tf

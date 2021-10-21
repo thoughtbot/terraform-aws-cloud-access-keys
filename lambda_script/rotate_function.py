@@ -78,7 +78,7 @@ def create_secret(service_client, arn, token):
     Raises:
         ResourceNotFoundException: If the secret with the specified arn and stage does not exist
     """
-    username = os.environ['USERNAME']
+    username = os.environ['IAM_USERNAME']
     iam = boto3.client('iam')
 
     # Make sure the current secret exists
@@ -152,7 +152,7 @@ def test_secret(service_client, arn, token):
     logger.info("testSecret: authenticated successfully using new tfe team token.")
 
     # Verify that we're authenticated as the expected user
-    if username == os.environ['USERNAME']:
+    if username == os.environ['IAM_USERNAME']:
         logger.info("testSecret: authenticated as %s for AWSPENDING stage of version %s for secret %s." % (username, token, arn))
         return
     else:
@@ -165,7 +165,7 @@ def test_secret(service_client, arn, token):
 def check_terraform_token(tfe_token, attempts=5):
     """ Function to test new Terraform team token """
 
-    tfc_workspace_id = os.environ['META_WORKSPACE_ID']
+    tfc_workspace_id = os.environ['TFE_WORKSPACE_ID']
     headers = {
     "Authorization" : f"Bearer {tfe_token}",
     "Content-Type" : "application/vnd.api+json"
@@ -245,7 +245,7 @@ def update_terraform_variables(access_key_id, secret_access_key, tfe_token):
     update the Meta workspace with the new access keys
     """
     #fetch workspace id from environment variable
-    tfc_workspace_id = os.environ['META_WORKSPACE_ID']
+    tfc_workspace_id = os.environ['TFE_WORKSPACE_ID']
     #fetch tfe token from environment variable
 
     tfe_aws_accesskey_id = ''
@@ -347,7 +347,7 @@ def update_terraform_variables(access_key_id, secret_access_key, tfe_token):
         raise ValueError(f"Failed to update terraform tfe env token variable, reason: {tfe_response.reason}")
     logger.info("Terraform tfe env token variable updated successfully.")
 
-    # send post request to trigger and plan and apply for the Meta workspace
+    # send post request to trigger and plan and apply for the Terraform workspace
     terraform_run_url = "https://app.terraform.io/api/v2/runs"
     payload = {
       "data": {
